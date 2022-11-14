@@ -105,8 +105,10 @@ static const CGFloat CheckmarkViewBorderWidth = 2.0;
 - (void)updateCheckView {
     if (_checked) {
         self.image = _checkedImage;
+        //        FIXME: Need to be replaced.
         if (@available(iOS 13.0, *)) {
-            // Use the current tintColor
+            self.tintColor = ORKWindowTintcolor(self.window) ? : [UIColor systemBlueColor];
+            NSLog(@"**** TESTING2: %@", self.tintColor);
         } else {
             self.backgroundColor = [self tintColor];
             self.tintColor = UIColor.whiteColor;
@@ -149,6 +151,7 @@ static const CGFloat CheckmarkViewBorderWidth = 2.0;
     [super tintColorDidChange];
     NSLog(@"**** TESTING: %@", self.tintColor);
     [self updateCheckView];
+    NSLog(@"**** TESTING: %@", self.tintColor);
 }
 
 @end
