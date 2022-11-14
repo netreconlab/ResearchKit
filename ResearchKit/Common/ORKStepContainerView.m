@@ -945,4 +945,13 @@ static NSString *scrollContentChangedNotification = @"scrollContentChanged";
     [self updateEffectViewStylingAndAnimate:NO checkCurrentValue:NO];
 }
 
+- (void)tintColorDidChange {
+    [super tintColorDidChange];
+    NSLog(@"**** TESTING: %@", self.tintColor);
+    UIColor *windowTintColor = self.window.tintColor;
+    if (!windowTintColor) {
+        NSLog(@"**** TESTING: %@", self.tintColor);
+    }
+}
+
 @end
