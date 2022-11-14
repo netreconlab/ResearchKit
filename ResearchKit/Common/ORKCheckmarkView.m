@@ -147,6 +147,7 @@ static const CGFloat CheckmarkViewBorderWidth = 2.0;
 
 - (void)tintColorDidChange {
     [super tintColorDidChange];
+    NSLog(@"**** TESTING: %@", self.tintColor);
     [self updateCheckView];
 }
 
