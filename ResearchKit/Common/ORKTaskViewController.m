@@ -1107,6 +1107,7 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     }
 
     stepViewController.view.tintColor = tintColor;
+    stepViewController.delegate = self;
     return stepViewController;
 }
 
