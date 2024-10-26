@@ -867,6 +867,17 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     return supportedOrientations;
 }
 
+// Note that this method skips logic related to Review mode, Task termination,
+// earlyTerminationConfiguration, and the -shouldPresentStep: check implemented in
+// -flipToNextPageFrom:animated: and -flipToPreviousPageFrom:animated:
+- (void)flipToPageWithIdentifier:(NSString *)identifier forward:(BOOL)forward animated:(BOOL)animated
+{
+    ORKStep *step = [self.task stepWithIdentifier:identifier];
+    if (step) {
+        [self showStepViewController:[self viewControllerForStep:step] goForward:forward animated:animated];
+    }
+}
+
 #pragma mark - internal helpers
 
 - (void)updateLastBeginningInstructionStepIdentifierForStep:(ORKStep *)step
@@ -1476,17 +1487,6 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
             
             [self showStepViewController:stepViewController goForward:NO animated:animated];
         }
-    }
-}
-
-// Note that this method skips logic related to Review mode, Task termination,
-// earlyTerminationConfiguration, and the -shouldPresentStep: check implemented in
-// -flipToNextPageFrom:animated: and -flipToPreviousPageFrom:animated:
-- (void)flipToPageWithIdentifier:(NSString *)identifier forward:(BOOL)forward animated:(BOOL)animated
-{
-    ORKStep *step = [self.task stepWithIdentifier:identifier];
-    if (step) {
-        [self showStepViewController:[self viewControllerForStep:step] goForward:forward animated:animated];
     }
 }
 

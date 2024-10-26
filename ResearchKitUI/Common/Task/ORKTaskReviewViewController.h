@@ -77,6 +77,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithResultSource:(id<ORKTaskResultSource>)resultSource forSteps:(NSArray<ORKStep *> *)steps withContentFrom:(nullable ORKInstructionStep *)reviewInstructionStep;
 
+- (void)flipToPageWithIdentifier:(NSString *)identifier forward:(BOOL)forward animated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END
