@@ -38,7 +38,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class ORKHealthKitCharacteristicTypeAnswerFormat;
-@class ORKHealthKitCharacteristicTypeAnswerFormat;
+@class ORKHealthKitQuantityTypeAnswerFormat;
 
 /**
  An enumeration of biological sex options.
