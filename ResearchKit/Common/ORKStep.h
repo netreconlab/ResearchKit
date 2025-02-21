@@ -28,9 +28,13 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+#if TARGET_OS_IOS
+#import <ResearchKit/ORKTypes.h>
+#endif
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <ResearchKit/ORKTypes.h>
 
 @class HKObjectType;
 @class ORKResult;
@@ -176,14 +180,14 @@ ORK_CLASS_AVAILABLE API_AVAILABLE(ios(11.0), watchos(6.0))
 /**
  A property that gates automatic tint color image changes based on appearance changes.
  
- The default value for this property is  NO.
+ The default value for this property is NO.
  */
 @property (nonatomic) BOOL shouldAutomaticallyAdjustImageTintColor;
 
 /**
  A property that determines whether  to show progress for this step when presented.
  
- The default is  YES.
+ The default is YES.
  */
 @property (nonatomic, assign) BOOL showsProgress;
 
@@ -248,7 +252,7 @@ ORK_CLASS_AVAILABLE API_AVAILABLE(ios(11.0), watchos(6.0))
 
 #pragma mark - iOS
 
-#if TARGET_OS_IOS || TARGET_OS_VISION
+#if TARGET_OS_IOS
 
 @class ORKBodyItem;
 
@@ -307,9 +311,6 @@ API_AVAILABLE(ios(11))
 
 @end
 #endif
-
-
-#pragma mark - watchOS / VisionOS
 
 
 NS_ASSUME_NONNULL_END

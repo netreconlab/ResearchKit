@@ -30,12 +30,9 @@
 
 
 #import "ORKBodyItem.h"
+#import "ORKBodyItem_Internal.h"
 #import "ORKLearnMoreInstructionStep.h"
 #import "ORKHelpers_Internal.h"
-
-#if !TARGET_OS_WATCH
-#import "ORKBodyItem_Internal.h"
-#endif
 
 @implementation ORKBodyItem
 {
@@ -43,7 +40,6 @@
     BOOL _isCustomButtonType;
 }
 
-#if !TARGET_OS_WATCH
 - (instancetype)initWithCustomButtonConfigurationHandler:(void(^)(UIButton *button))configurationHandler
 {
     self = [super init];
@@ -54,7 +50,6 @@
     }
     return self;
 }
-#endif
 
 - (BOOL)isCustomButtonItemType
 {

@@ -32,7 +32,11 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 #import <UIKit/UIKit.h>
+
+
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKTypes.h>
 
 @class ORKScaleAnswerFormat;
@@ -52,6 +56,7 @@
 @class ORKLocationAnswerFormat;
 @class ORKSESAnswerFormat;
 @class ORKImageChoice;
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -434,6 +439,10 @@ ORK_CLASS_AVAILABLE
 
 @end
 
+
+#pragma mark - iOS
+
+#if TARGET_OS_IOS
 @interface ORKAnswerFormat()
 
 /// @name Factory methods
@@ -523,7 +532,7 @@ ORK_CLASS_AVAILABLE
                                                       minimumValue:(double)minimumValue
                                                       maximumValue:(double)maximumValue
                                                       defaultValue:(double)defaultValue;
-#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION && TARGET_OS_IOS
+#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION
 + (ORKLocationAnswerFormat *)locationAnswerFormat;
 #endif
 
@@ -1781,7 +1790,6 @@ This By default, the value of this property is `NO`.
   */
 @property (copy, nullable) NSString *placeholder;
 
-#if !TARGET_OS_WATCH
 /**
  The autocapitalization type that applies to the user's input.
  
@@ -1824,7 +1832,6 @@ This By default, the value of this property is `NO`.
  If specified, overrides the default password generation rules for fields with secureTextEntry.
  */
 @property (nonatomic, copy, nullable) UITextInputPasswordRules *passwordRules API_AVAILABLE(ios(12));
-#endif
 
 @end
 
@@ -2207,7 +2214,7 @@ ORK_CLASS_AVAILABLE
  
  An `ORKLocationAnswerFormat` object produces an `ORKLocationQuestionResult` object.
  */
-#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION && TARGET_OS_IOS
+#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION
 ORK_CLASS_AVAILABLE
 @interface ORKLocationAnswerFormat : ORKAnswerFormat
 
@@ -2242,5 +2249,7 @@ ORK_CLASS_AVAILABLE
 @property (nonatomic, nullable) NSString *bottomRungText;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

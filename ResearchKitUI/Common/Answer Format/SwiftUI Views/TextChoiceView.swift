@@ -28,8 +28,8 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ResearchKit
 import SwiftUI
+import ResearchKit
 
 struct TextChoiceView: View {
     @ObservedObject var textChoiceHelper: SwiftUITextChoiceHelper

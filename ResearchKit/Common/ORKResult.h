@@ -29,7 +29,11 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKTypes.h>
+#endif
+
 
 NS_ASSUME_NONNULL_BEGIN
 
