@@ -162,6 +162,10 @@ static const CGFloat ORKSignatureTopPadding = 37.0;
     [_scrollView setDelegate:self];
 }
 
+- (WKWebView*)getWebView {
+	return _webView;
+}
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [super traitCollectionDidChange:previousTraitCollection];
 
