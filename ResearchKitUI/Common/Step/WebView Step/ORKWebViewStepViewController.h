@@ -64,6 +64,8 @@ ORK_CLASS_AVAILABLE
 
 - (void)scrollSignatureViewRect:(CGRect)rect toPoint:(CGPoint)endPoint animated:(BOOL)animated;
 
+- (WKWebView*)getWebView;
+
 @end
 
 NS_ASSUME_NONNULL_END
