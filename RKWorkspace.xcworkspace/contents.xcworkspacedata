@@ -7,7 +7,4 @@
    <FileRef
       location = "group:samples/ORKCatalog/ORKCatalog.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:ResearchKitSwiftUI/ResearchKitSwiftUI.xcodeproj">
-   </FileRef>
 </Workspace>

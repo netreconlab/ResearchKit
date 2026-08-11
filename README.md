@@ -1,9 +1,10 @@
+
 ![ResearchKit](https://github.com/user-attachments/assets/0384c1a6-ec67-45d3-be68-136a2e4cacff)
 
 ResearchKit Framework
 ===========
 
-![VCS](https://img.shields.io/badge/dvcs-Git%20%2B%20LFS-tomato.svg) ![Platform](https://img.shields.io/cocoapods/p/ResearchKit.svg) ![CocoaPods](https://img.shields.io/cocoapods/v/ResearchKit.svg) ![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-yellow.svg?style=flat) [![License](https://img.shields.io/badge/license-BSD-green.svg?style=flat)](https://github.com/ResearchKit/ResearchKit#license) ![](https://travis-ci.com/ResearchKit/ResearchKit.svg?branch=master)
+![VCS](https://img.shields.io/badge/dvcs-Git%20%2B%20LFS-tomato.svg) ![Platform](https://img.shields.io/cocoapods/p/ResearchKit.svg) [![License](https://img.shields.io/badge/license-BSD-green.svg?style=flat)](https://github.com/ResearchKit/ResearchKit#license)
 
 The *ResearchKit™ framework* is an open source software framework that makes it easy to create apps
 for medical research or for other research projects.
@@ -23,7 +24,7 @@ for medical research or for other research projects.
 
 # Requirements <a name="requirements"></a>
 
-The *ResearchKit framework* codebase supports iOS and requires Xcode 12.0 or newer. The *ResearchKit framework* has a Base SDK version of 13.0.
+The *ResearchKit framework* codebase supports iOS and requires Xcode 16.0 or newer. The *ResearchKit framework* has a Base SDK version of 17.0.
 
 # Documentation <a name="documentation"></a>
 
@@ -35,7 +36,6 @@ View the *ResearchKit framework* documentation by setting ResearchKit as your ta
 # Getting Started <a name="gettingstarted"></a>
 
 * [Website](https://www.researchandcare.org)
-* [WWDC: ResearchKit and CareKit Reimagined](https://developer.apple.com/videos/play/wwdc2019/217/)
 
 
 ### Install as an embedded framework <a name="installation"></a>
@@ -78,78 +78,6 @@ The height question is presented in the figure below.
 |   |   |
 |---|---|
 | ![height-question](https://github.com/ResearchKit/ResearchKit/assets/29615893/4f425329-83b7-45c3-84f9-58cdbcaf2529) | ![height-question-2](https://github.com/ResearchKit/ResearchKit/assets/29615893/2cc0dc2c-5c2a-4b50-a4be-834363fb64b5) |
-
-### ResearchKit SwiftUI 
-
-We are excited to announce the release of a new beta API for surveys in ResearchKit. This API is designed to enhance the flexibility, customization, and cross-platform compatibility of surveys in your ResearchKit apps. Below are the key features and usage details.
-
-New Form APIs offer an easily configurable and flexible UI, with the same look and feel of `ORKFormStep`: 
-* `ResearchForm`
-    * Manages the navigation between steps in a survey.
-* `ResearchFormStep`
-    *  Represents a step in a survey and lays out the header and questions on one page. Question numbers (e.g. 1 of 3) are automatically added at the top of each question to denote progress in a step.
-* `ResearchFormCompletion`
-    * Represents the context for a survey's completion
-* `ResearchFormResult`
-    * Represents responses for the different kinds of questions.
-* `StepHeader`
-    * A step header containing an image, title, and subtitle.
-* `QuestionHeader`
-    * A question header containing a title and detail.
-* `InstructionBodyItem`
-    * Displays an image and text side by side.
-* `questionRequired` (`ViewModifier`)
-    * Designates a question as required or optional.
-
-#### Survey Question Types:
-* `MultipleChoiceQuestion`
-* `HeightQuestion`
-* `WeightQuestion`
-* `SliderQuestion`
-* `TextQuestion`
-* `DateTimeQuestion`
-* `NumericQuestion`
-* `ImageChoiceQuestion`    
-
-The example below shows how to create a `ResearchForm` to present a text question for the participant to answer, and then save their results. 
-
-```swift
-import ResearchKitSwiftUI
-
-ResearchForm(
-    id: "SurveyTask",
-    steps: {
-        ResearchFormStep(
-            title: "Demographics",
-            subtitle: "Tell us about yourself",
-            content: {
-                TextQuestion(
-                    id: "textQuestion",
-                    title: "What is your name?",
-                    prompt: "Enter your name here",
-                    lineLimit: .singleLine,
-                    characterLimit: 0
-                )
-                .questionRequired(true)
-            }
-        )
-    },
-    onResearchFormCompletion: { completion in
-        switch completion {
-        case .completed(let results):
-            save(results)
-        case .discarded:
-            cancel()
-        default:
-            cancel()
-        }
-    }
-)
-```
-
-#### Install as an embedded framework
-
-Download the project source code and drag in the *ResearchKitSwiftUI* folder. In the dialog that pops up, choose to copy files to destination and create folders. Then hit the finish button. Finally, embed the *ResearchKitSwiftUI* framework in your app by adding it to the "Frameworks, Libraries, and Embedded Content" section for your target.
 
 # Consent <a name="consent"></a>
 
@@ -208,7 +136,7 @@ The consent steps are presented in the figure below.
 |---|---|
 | ![consent-welcome-page](https://github.com/ResearchKit/ResearchKit/assets/29615893/e6cbbe07-47ed-4bb4-a84a-f3bf612e9122) | ![consent-before-you-join](https://github.com/ResearchKit/ResearchKit/assets/29615893/687fe345-14d9-4356-9c37-c6a2714875ae) |
 
-Vist the `Obtaining Consent`article in ResearchKit's Documentation for
+Visit the `Obtaining Consent`article in ResearchKit's Documentation for
 more examples that include signature collection and PDF file storage.
 
 # Active Tasks <a name="active-tasks"></a>
