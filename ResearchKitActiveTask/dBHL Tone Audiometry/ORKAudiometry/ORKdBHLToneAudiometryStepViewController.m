@@ -70,6 +70,8 @@ NSString * const ORKdBHLToneAudiometryStepViewAccessibilityIdentifier = @"ORKdBH
     dispatch_block_t _preStimulusDelayWorkBlock;
     dispatch_block_t _pulseDurationWorkBlock;
     dispatch_block_t _postStimulusDelayWorkBlock;
+    
+    BOOL _wasIdleTimerDisabled;
 }
 
 @property (nonatomic, strong) ORKdBHLToneAudiometryContentView *dBHLToneAudiometryContentView;
@@ -122,28 +124,34 @@ NSString * const ORKdBHLToneAudiometryStepViewAccessibilityIdentifier = @"ORKdBH
 - (void)configureStep {
     ORKdBHLToneAudiometryStep *dBHLTAStep = [self dBHLToneAudiometryStep];
     
-    self.dBHLToneAudiometryContentView = [[ORKdBHLToneAudiometryContentView alloc] init];
-    self.activeStepView.activeCustomView = self.dBHLToneAudiometryContentView;
-    self.activeStepView.customContentFillsAvailableSpace = YES;
-    [self.activeStepView.navigationFooterView setHidden:YES];
+    if (!self.dBHLToneAudiometryContentView) {
+        self.dBHLToneAudiometryContentView = [[ORKdBHLToneAudiometryContentView alloc] init];
+        self.activeStepView.activeCustomView = self.dBHLToneAudiometryContentView;
+        self.activeStepView.customContentFillsAvailableSpace = YES;
+        [self.activeStepView.navigationFooterView setHidden:YES];
 
-    [self.dBHLToneAudiometryContentView.tapButton addTarget:self action:@selector(tapButtonPressed) forControlEvents:UIControlEventTouchDown];
-    
-    _audioChannel = dBHLTAStep.earPreference;
-    _audioGenerator = [self createAudioGeneratorFromHeadphoneType:dBHLTAStep.headphoneType];
-    _audioGenerator.delegate = self;
+        [self.dBHLToneAudiometryContentView.tapButton addTarget:self action:@selector(tapButtonPressed) forControlEvents:UIControlEventTouchDown];
+        
+        _audioChannel = dBHLTAStep.earPreference;
+        _audioGenerator = [self createAudioGeneratorFromHeadphoneType:dBHLTAStep.headphoneType];
+        _audioGenerator.delegate = self;
 
-    _hapticFeedback = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleHeavy];
+        _hapticFeedback = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleHeavy];
+    }
 }
 
 - (void)addObservers {
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+    [center addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [center addObserver:self selector:@selector(appWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)removeObservers {
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+    [center removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [center removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -154,11 +162,24 @@ NSString * const ORKdBHLToneAudiometryStepViewAccessibilityIdentifier = @"ORKdBH
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    _wasIdleTimerDisabled = [UIApplication sharedApplication].idleTimerDisabled;
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     [self start];
     [self addObservers];
 }
 
+-(void)appDidEnterBackground:(NSNotification*)note {
+    [UIApplication sharedApplication].idleTimerDisabled = _wasIdleTimerDisabled;
+}
+
+-(void)appWillEnterForeground:(NSNotification*)note {
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+}
+
 -(void)appWillTerminate:(NSNotification*)note {
+    [UIApplication sharedApplication].idleTimerDisabled = _wasIdleTimerDisabled;
+    
     [self stopAudio];
     [self removeObservers];
 }
@@ -186,6 +207,9 @@ NSString * const ORKdBHLToneAudiometryStepViewAccessibilityIdentifier = @"ORKdBH
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    
+    [UIApplication sharedApplication].idleTimerDisabled = _wasIdleTimerDisabled;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     _audioGenerator.delegate = nil;
@@ -265,7 +289,7 @@ NSString * const ORKdBHLToneAudiometryStepViewAccessibilityIdentifier = @"ORKdBH
     const NSTimeInterval toneDuration = [self dBHLToneAudiometryStep].toneDuration;
     const NSTimeInterval postStimulusDelay = [self dBHLToneAudiometryStep].postStimulusDelay;
     
-    double delay1 = arc4random_uniform([self dBHLToneAudiometryStep].maxRandomPreStimulusDelay - 1);
+    double delay1 = arc4random_uniform((uint32_t)([self dBHLToneAudiometryStep].maxRandomPreStimulusDelay - 1));
     double delay2 = (double)arc4random_uniform(10)/10;
     double preStimulusDelay = delay1 + delay2 + 1;
     [self.audiometryEngine registerPreStimulusDelay:preStimulusDelay];

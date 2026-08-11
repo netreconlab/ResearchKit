@@ -126,7 +126,7 @@ public struct ImageChoice: Identifiable, Equatable {
 }
 
 /// Represents the number of of choices that can be selected.
-public enum ChoiceSelectionLimit {
+public enum ChoiceSelectionLimit: String, Codable, Hashable, Sendable {
 
     /// Allows for the selection of only one choice.
     case single
@@ -441,7 +441,7 @@ public struct ImageChoiceQuestion: View {
             Text(strings.joined(separator: ", "))
                 .foregroundStyle(.primary)
         } else {
-            Text("Tap to select")
+            Text("IMAGE_TAP_SELECT")
                 .foregroundStyle(.secondary)
         }
     }
@@ -493,7 +493,7 @@ public struct ImageChoiceQuestion: View {
     @ViewBuilder
     private func multipleSelectionHeader() -> some View {
         #if !os(watchOS)
-            Text("SELECT ALL THAT APPLY")
+            Text("IMAGE_SELECT_ALL")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(.secondary)
@@ -501,7 +501,7 @@ public struct ImageChoiceQuestion: View {
                 .padding([.horizontal, .top])
             Divider()
         #else
-            Text("SELECT ALL THAT APPLY")
+            Text("IMAGE_SELECT_ALL")
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .font(.caption2)

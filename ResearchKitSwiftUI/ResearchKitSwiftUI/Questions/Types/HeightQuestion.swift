@@ -31,7 +31,7 @@
 import SwiftUI
 
 /// Represents the different measurement systems that can be used.
-public enum MeasurementSystem {
+public enum MeasurementSystem: Codable, Hashable, Sendable {
 
     /// The US Customary measurement system.
     case USC
@@ -189,7 +189,7 @@ public struct HeightQuestion: View {
         QuestionCard {
             Question(title: title, detail: detail) {
                 HStack {
-                    Text("Select Height")
+                    Text("QUESTION_HEIGHT")
                         .foregroundStyle(Color.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Button {

@@ -28,7 +28,10 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKDevice.h>
+#endif
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,7 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithProduct:(NSString *)product
                       osVersion:(NSString *)osVersion
                         osBuild:(NSString *)osBuild
-                       platform:(NSString *)platform;
+                       platform:(NSString *)platform
+             researchKitVersion:(nullable NSString *)researchKitVersion
+       researchKitBundleVersion:(nullable NSString *)researchKitBundleVersion;
 
 @end
 

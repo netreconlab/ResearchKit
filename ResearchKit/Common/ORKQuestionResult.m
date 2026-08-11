@@ -28,18 +28,15 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <ResearchKit/ORKAnswerFormat_Internal.h>
-#import <ResearchKit/ORKAnswerFormat_Private.h>
-#import <ResearchKit/ORKHelpers_Internal.h>
-#import <ResearchKit/ORKQuestionResult.h>
-#import <ResearchKit/ORKQuestionStep.h>
-#import <ResearchKit/ORKQuestionStep_Private.h>
-#import <ResearchKit/ORKResult_Private.h>
-#import <ResearchKit/ORKStep_Private.h>
 
-#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION && TARGET_OS_IOS
-#import <CoreLocation/CoreLocation.h>
-#import <MapKit/MapKit.h>
+#import "ORKQuestionResult_Private.h"
+#import "ORKResult_Private.h"
+
+
+#if TARGET_OS_IOS
+#import "ORKQuestionStep.h"
+#import "ORKHelpers_Internal.h"
+#import "ORKAnswerFormat_Internal.h"
 #endif
 
 @implementation ORKQuestionResult {
@@ -264,14 +261,12 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];
     ORK_ENCODE_OBJ(aCoder, calendar);
-    ORK_ENCODE_OBJ(aCoder, timeZone);
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         ORK_DECODE_OBJ_CLASS(aDecoder, calendar, NSCalendar);
-        ORK_DECODE_OBJ_CLASS(aDecoder, timeZone, NSTimeZone);
         if (_typedAnswerOrNoAnswer == nil) {
             // Backwards compatibility, do not change the key
             ORK_DECODE_OBJ_CLASSES_FOR_KEY(aDecoder, typedAnswerOrNoAnswer, [[self class] answerClassesIncludingNoAnswer], dateAnswer);
@@ -293,7 +288,6 @@
     
     __typeof(self) castObject = object;
     return (isParentSame &&
-            ORKEqualObjects(self.timeZone, castObject.timeZone) &&
             ORKEqualObjects(self.calendar, castObject.calendar));
 }
 
@@ -303,7 +297,6 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     ORKDateQuestionResult *result = [super copyWithZone:zone];
-    result->_timeZone = [self.timeZone copyWithZone:zone];
     result->_calendar = [self.calendar copyWithZone:zone];
     return result;
 }
@@ -329,7 +322,7 @@
 
 @end
 
-#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION && TARGET_OS_IOS
+#if ORK_FEATURE_CLLOCATIONMANAGER_AUTHORIZATION
 #pragma mark - ORKLocationQuestionResult
 
 @implementation ORKLocation
@@ -471,6 +464,7 @@ static NSString *const RegionIdentifierKey = @"region.identifier";
 }
 
 @end
+
 #endif
 
 #pragma mark - ORKSESQuestionResult

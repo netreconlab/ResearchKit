@@ -39,10 +39,7 @@
 #import "ORKStep_Private.h"
 
 #import "ORKHelpers_Internal.h"
-
-#if !TARGET_OS_WATCH
 #import "ORKFormItemVisibilityRule.h"
-#endif
 
 @implementation ORKFormStep
 
@@ -58,6 +55,7 @@
         self.useCardView = YES;
         self.autoScrollEnabled = YES;
         self.cardViewStyle = ORKCardViewStyleDefault;
+        self.headerTextAlignment = NSTextAlignmentNatural;
     }
     return self;
 }
@@ -150,11 +148,14 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        ORK_DECODE_OBJ_ARRAY(aDecoder, formItems, ORKFormItem);
+        NSArray<ORKFormItem *> *decodedFormItems = [aDecoder decodeObjectOfClasses:[NSSet setWithObjects:[NSArray class],[ORKFormItem class], nil] forKey:@"formItems"];
         ORK_DECODE_BOOL(aDecoder, useCardView);
         ORK_DECODE_BOOL(aDecoder, autoScrollEnabled);
         ORK_DECODE_OBJ_CLASS(aDecoder, footerText, NSString);
         ORK_DECODE_ENUM(aDecoder, cardViewStyle);
+        
+        // Use setter to properly establish weak reference relationships
+        self.formItems = decodedFormItems;
     }
     return self;
 }
@@ -185,7 +186,7 @@
     }
 }
 
-#if ORK_FEATURE_HEALTHKIT_AUTHORIZATION && TARGET_OS_IOS
+#if ORK_FEATURE_HEALTHKIT_AUTHORIZATION
 - (NSSet<HKObjectType *> *)requestedHealthKitTypesForReading {
     NSMutableSet<HKObjectType *> *healthTypes = [NSMutableSet set];
     
@@ -265,7 +266,6 @@
     return self;
 }
 
-#if TARGET_OS_IOS
 - (ORKFormItem *)confirmationAnswerFormItemWithIdentifier:(NSString *)identifier
                                                      text:(nullable NSString *)text
                                              errorMessage:(NSString *)errorMessage {
@@ -285,7 +285,6 @@
                                                        optional:self.optional];
     return item;
 }
-#endif
 
 + (BOOL)supportsSecureCoding {
     return YES;
@@ -299,9 +298,9 @@
     item->_learnMoreItem = [_learnMoreItem copy];
     item->_showsProgress = _showsProgress;
     item->_tagText = [_tagText copy];
-#if !TARGET_OS_WATCH
     item->_visibilityRule = [_visibilityRule copy];
-#endif
+    // Do not copy step reference - it will be set properly via setFormItems: to establish weak reference
+    item->_step = nil;
     return item;
 }
 
@@ -316,11 +315,9 @@
         ORK_DECODE_BOOL(aDecoder, showsProgress);
         ORK_DECODE_OBJ_CLASS(aDecoder, placeholder, NSString);
         ORK_DECODE_OBJ_CLASS(aDecoder, answerFormat, ORKAnswerFormat);
-        ORK_DECODE_OBJ_CLASS(aDecoder, step, ORKFormStep);
+        // Do not decode step here - it will be set properly via setFormItems: to establish weak reference
         ORK_DECODE_OBJ_CLASS(aDecoder, tagText, NSString);
-#if !TARGET_OS_WATCH
         ORK_DECODE_OBJ_CLASS(aDecoder, visibilityRule, ORKFormItemVisibilityRule);
-#endif
     }
     return self;
 }
@@ -334,7 +331,7 @@
     ORK_ENCODE_BOOL(aCoder, showsProgress);
     ORK_ENCODE_OBJ(aCoder, placeholder);
     ORK_ENCODE_OBJ(aCoder, answerFormat);
-    ORK_ENCODE_OBJ(aCoder, step);
+    // Do not encode step here - it creates retain cycle during decoding
     ORK_ENCODE_OBJ(aCoder, tagText);
     ORK_ENCODE_OBJ(aCoder, visibilityRule);
 }
@@ -359,12 +356,8 @@
 }
 
 - (NSUInteger)hash {
-#if !TARGET_OS_WATCH
      // Ignore the step reference - it's not part of the content of this item
     return _identifier.hash ^ _text.hash ^ _placeholder.hash ^ _answerFormat.hash ^ (_optional ? 0xf : 0x0) ^ _detailText.hash ^ _learnMoreItem.hash ^ (_showsProgress ? 0xf : 0x0) ^ _tagText.hash ^ _visibilityRule.hash;
-#else
-    return _identifier.hash ^ _text.hash ^ _placeholder.hash ^ _answerFormat.hash ^ (_optional ? 0xf : 0x0) ^ _detailText.hash ^ _learnMoreItem.hash ^ (_showsProgress ? 0xf : 0x0) ^ _tagText.hash;
-#endif
 }
 
 - (ORKAnswerFormat *)impliedAnswerFormat {

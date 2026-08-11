@@ -29,12 +29,16 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKCollectionResult.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class ORKPageStep;
-
+@class ORKDevice;
 /**
  The `ORKPageResult` is an `ORKTaskResult` subclass of a collection of `ORKStepResult`
  objects. This is considered private, and it is used internally by `ORKPageStepViewController`
@@ -44,6 +48,8 @@ ORK_CLASS_AVAILABLE
 @interface ORKPageResult : ORKTaskResult
 
 - (instancetype)initWithPageStep:(ORKPageStep *)step stepResult:(ORKStepResult*)result;
+
+- (instancetype)initWithPageStep:(ORKPageStep *)step stepResult:(ORKStepResult *)result device:(ORKDevice *)device uuid:(NSUUID *)uuid;
 
 - (void)addStepResult:(nullable ORKStepResult *)stepResult;
 

@@ -30,12 +30,9 @@
 
 
 #import "ORKBodyItem.h"
+#import "ORKBodyItem_Internal.h"
 #import "ORKLearnMoreInstructionStep.h"
 #import "ORKHelpers_Internal.h"
-
-#if !TARGET_OS_WATCH
-#import "ORKBodyItem_Internal.h"
-#endif
 
 @implementation ORKBodyItem
 {
@@ -43,7 +40,6 @@
     BOOL _isCustomButtonType;
 }
 
-#if !TARGET_OS_WATCH
 - (instancetype)initWithCustomButtonConfigurationHandler:(void(^)(UIButton *button))configurationHandler
 {
     self = [super init];
@@ -54,7 +50,6 @@
     }
     return self;
 }
-#endif
 
 - (BOOL)isCustomButtonItemType
 {
@@ -110,6 +105,7 @@
         ORK_DECODE_OBJ_CLASS(aDecoder, text, NSString);
         ORK_DECODE_OBJ_CLASS(aDecoder, detailText, NSString);
         ORK_DECODE_OBJ_CLASS(aDecoder, learnMoreItem, ORKLearnMoreItem);
+        ORK_DECODE_OBJ_CLASS(aDecoder, accessibilityIdentifier, NSString);
         ORK_DECODE_INTEGER(aDecoder, bodyItemStyle);
         ORK_DECODE_IMAGE(aDecoder, image);
         ORK_DECODE_BOOL(aDecoder, useCardStyle);
@@ -122,6 +118,7 @@
     ORK_ENCODE_OBJ(aCoder, text);
     ORK_ENCODE_OBJ(aCoder, detailText);
     ORK_ENCODE_OBJ(aCoder, learnMoreItem);
+    ORK_ENCODE_OBJ(aCoder, accessibilityIdentifier);
     ORK_ENCODE_INTEGER(aCoder, bodyItemStyle);
     ORK_ENCODE_IMAGE(aCoder, image);
     ORK_ENCODE_BOOL(aCoder, useCardStyle);
@@ -133,6 +130,7 @@
     bodyItem->_text = [self.text copy];
     bodyItem->_detailText = [self.detailText copy];
     bodyItem->_learnMoreItem = [self.learnMoreItem copy];
+    bodyItem->_accessibilityIdentifier = [self.accessibilityIdentifier copy];
     bodyItem->_bodyItemStyle = self.bodyItemStyle;
     bodyItem->_image = [self.image copy];
     bodyItem->_useCardStyle = self.useCardStyle;
@@ -142,7 +140,7 @@
 }
 
 - (NSUInteger)hash {
-    return _text.hash ^ _detailText.hash ^ _learnMoreItem.hash ^ _image.hash;
+    return _text.hash ^ _detailText.hash ^ _learnMoreItem.hash ^ _image.hash ^ _accessibilityIdentifier.hash;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -154,6 +152,7 @@
     return (ORKEqualObjects(self.text, castObject.text)
             && ORKEqualObjects(self.detailText, castObject.detailText)
             && ORKEqualObjects(self.learnMoreItem, castObject.learnMoreItem)
+            && ORKEqualObjects(self.accessibilityIdentifier, castObject.accessibilityIdentifier)
             && (self.bodyItemStyle == castObject.bodyItemStyle)
             && ORKEqualObjects(self.image, castObject.image)
             && (self.useCardStyle == castObject.useCardStyle)

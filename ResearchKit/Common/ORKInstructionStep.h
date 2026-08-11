@@ -28,8 +28,14 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 #import <UIKit/UIKit.h>
+
+
+
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKStep.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -29,7 +29,11 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKTypes.h>
+#endif
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -112,6 +116,11 @@ ORK_CLASS_AVAILABLE
  generally correspond to the end of the instantaneous data collection period. 
  */
 @property (nonatomic, copy) NSDate *endDate;
+
+/**
+ Metadata that describes the user's time zone.
+ */
+@property (nonatomic, copy, nullable) NSTimeZone *timeZone;
 
 /**
  Metadata that describes the conditions under which the result was acquired.

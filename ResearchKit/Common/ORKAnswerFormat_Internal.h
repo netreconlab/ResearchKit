@@ -33,9 +33,10 @@
 #import <HealthKit/HealthKit.h>
 #endif
 
+#if TARGET_OS_IOS
 #import <ResearchKit/ORKAnswerFormat_Private.h>
 #import <ResearchKit/ORKChoiceAnswerFormatHelper.h>
-
+#endif
 @class ORKChoiceAnswerFormatHelper;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -57,7 +58,7 @@ NSString *ORKQuestionTypeString(ORKQuestionType questionType);
 @end
 
 ORK_DESIGNATE_CODING_AND_SERIALIZATION_INITIALIZERS(ORKAnswerFormat)
-#if TARGET_OS_IOS || TARGET_OS_VISION
+#if TARGET_OS_IOS
 ORK_DESIGNATE_CODING_AND_SERIALIZATION_INITIALIZERS(ORKImageChoiceAnswerFormat)
 ORK_DESIGNATE_CODING_AND_SERIALIZATION_INITIALIZERS(ORKValuePickerAnswerFormat)
 ORK_DESIGNATE_CODING_AND_SERIALIZATION_INITIALIZERS(ORKMultipleValuePickerAnswerFormat)
@@ -134,11 +135,6 @@ ORK_DESIGNATE_CODING_AND_SERIALIZATION_INITIALIZERS(ORKTextChoice)
 
 @end
 
-@interface ORKDateAnswerFormat () {
-    NSDate *_currentDateOverride;
-}
-@end
-
 #if TARGET_OS_IOS
 @protocol ORKScaleAnswerFormatProvider <NSObject>
 
@@ -197,12 +193,26 @@ ORK_DESIGNATE_CODING_AND_SERIALIZATION_INITIALIZERS(ORKTextChoice)
 
 NSArray<Class> *ORKAllowableValueClasses(void);
 
+@protocol ORKWarningStateSupport <NSObject>
+
+@property (nonatomic, nullable) NSString *warningStateMessage;
+@property (nonatomic, nullable) NSArray<NSObject<NSCopying, NSSecureCoding> *> *warningStateTriggerValues;
+
+@end
+
+@interface ORKBooleanAnswerFormat () <ORKWarningStateSupport>
+
+@end
+
+@interface ORKTextChoiceAnswerFormat () <ORKWarningStateSupport>
+
+@end
+
 @interface ORKTextChoice () <ORKAnswerOption>
 
 @end
 
 #if TARGET_OS_IOS
-
 @interface ORKValuePickerAnswerFormat ()
 
 - (instancetype)initWithTextChoices:(NSArray<ORKTextChoice *> *)textChoices nullChoice:(ORKTextChoice *)nullChoice NS_DESIGNATED_INITIALIZER;
@@ -210,6 +220,7 @@ NSArray<Class> *ORKAllowableValueClasses(void);
 - (ORKTextChoice *)nullTextChoice;
 
 @end
+
 
 @interface ORKImageChoice () <ORKAnswerOption>
 
@@ -222,7 +233,11 @@ NSArray<Class> *ORKAllowableValueClasses(void);
 
 @end
 
-@interface ORKDateAnswerFormat ()
+
+@interface ORKDateAnswerFormat () {
+    NSDate *_currentDateOverride;
+}
+
 - (NSDate *)pickerDefaultDate;
 - (nullable NSDate *)pickerMinimumDate;
 - (nullable NSDate *)pickerMaximumDate;
@@ -277,6 +292,8 @@ NSArray<Class> *ORKAllowableValueClasses(void);
 @interface ORKTextChoiceOther()
 
 @property (nonatomic, nullable) NSString *textViewText;
+
+@property (nonatomic, nonnull, readonly) NSString *answer;
 
 @end
 #endif
